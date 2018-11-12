@@ -17,13 +17,20 @@ export default class Body extends Component{
         })
     }
 
+    changeName(){
+        this.props.changeName('James')
+    }
+
+    changeFather(event){
+        this.props.changeFather(event.target.value)
+    }
+
     parseDataToParent(){
         this.props.greet(this.state.age)
     }
 
     render(){
         let content = "";
-        console.log(this.props);
         if(true){
             content = 'new!!!'
         }
@@ -45,6 +52,8 @@ export default class Body extends Component{
                     {this.props.children}
                 </div>
                 <button className="btn btn-primary" onClick={this.parseDataToParent.bind(this)}>Trgger greet</button>
+                <button className="btn btn-primary" onClick={this.changeName.bind(this)}>Change name</button>
+                <input defaultValue={this.props.father} onChange={(event)=>this.changeFather(event)}/>
             </div>
         )
     }
