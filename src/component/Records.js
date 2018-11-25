@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Record from './Record';
 import RecordForm from './RecordForm';
+import AmountBox from './AmountBox'
 // import {getJSON} from 'jquery';
 
 import * as RecordsAPI from '../util/RecordAPI';
@@ -77,14 +78,35 @@ export default class Records extends Component{
     }
 
     handleDelete(data){
-        console.log(data);
-        console.log(this.state.recordsList);
         const dataIndex = this.state.recordsList.indexOf(data);
-        console.log(dataIndex);
         const newRecords = this.state.recordsList.filter((item,index) => index !== dataIndex);
         this.setState({
             recordsList: newRecords
         })
+    }
+
+    getIncome(){
+        let newRecords = this.state.recordsList.filter((item) => {
+            return item.amount > 0
+        });
+        const income = newRecords.reduce((prev, curr) => {
+            return prev + Number.parseInt(curr.amount, 0)
+        },0)
+        return income;
+    }
+
+    getOutcome(){
+        let newRecords = this.state.recordsList.filter((item) => {
+            return item.amount < 0
+        });
+        const outcome = newRecords.reduce((prev, curr) => {
+            return prev + Number.parseInt(curr.amount, 0)
+        },0)
+        return outcome;
+    }
+
+    getBalance(){
+        return this.getIncome() +  this.getOutcome();
     }
 
     render(){
@@ -96,6 +118,11 @@ export default class Records extends Component{
         }else{
             return(
                 <div className="p-3">
+                    <div className="d-flex">
+                        <AmountBox text="Income" type="success" amount={this.getIncome()}/>
+                        <AmountBox text="Outcome" type="danger" amount={this.getOutcome()}/>
+                        <AmountBox text="Balance" type="warning" amount={this.getBalance()}/>
+                    </div>
                     <RecordForm setRecord={this.appendRecord.bind(this)}/>
                     <table className="table table-bordered">
                         <thead>
