@@ -59,6 +59,34 @@ export default class Records extends Component{
         })
     }
 
+    updateRecord(oldData, newData){
+        const dataIndex = this.state.recordsList.indexOf(oldData);
+        const newList = this.state.recordsList.map((item, index) => {
+            if(index !== dataIndex){
+                return item;
+            }else{
+                return {
+                    ...item,
+                    ...newData
+                }
+            }
+        })
+        this.setState({
+            recordsList:newList
+        })
+    }
+
+    handleDelete(data){
+        console.log(data);
+        console.log(this.state.recordsList);
+        const dataIndex = this.state.recordsList.indexOf(data);
+        console.log(dataIndex);
+        const newRecords = this.state.recordsList.filter((item,index) => index !== dataIndex);
+        this.setState({
+            recordsList: newRecords
+        })
+    }
+
     render(){
         const {error, isLoaded, recordsList} = this.state;
         if(error){
@@ -67,18 +95,24 @@ export default class Records extends Component{
             return <div>Loading ...</div>
         }else{
             return(
-                <div>
+                <div className="p-3">
                     <RecordForm setRecord={this.appendRecord.bind(this)}/>
-                    <table>
+                    <table className="table table-bordered">
                         <thead>
                             <tr>
                                 <th>Date</th>
                                 <th>Title</th>
                                 <th>Amount</th>
+                                <th>Edit</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {recordsList.map((message) => <Record key={message.id} {...message} />)}    
+                            {recordsList.map((message) => <Record 
+                            key={message.id} 
+                            record={message} 
+                            changeRecord={this.updateRecord.bind(this)} 
+                            deleteRecord={this.handleDelete.bind(this)}
+                            />)}    
                         </tbody>
                     </table>
                 </div>
