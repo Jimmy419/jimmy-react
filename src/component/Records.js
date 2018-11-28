@@ -23,7 +23,7 @@ export default class Records extends Component{
                 date:2323232
             }]
         }
-        console.log('first commit');
+
     }
 
     componentDidMount(){
